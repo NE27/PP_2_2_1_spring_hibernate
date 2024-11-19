@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public class UserDaoImp implements UserDao {
-
    @Autowired
    private SessionFactory sessionFactory;
 
@@ -22,8 +21,16 @@ public class UserDaoImp implements UserDao {
    @Override
    @SuppressWarnings("unchecked")
    public List<User> listUsers() {
-      TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
+      TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User");
       return query.getResultList();
    }
 
+   @Override
+   public User getUserByCar(String model, int series) {
+      TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery(
+              "from User where car.model = :model and car.series = :series", User.class);
+      query.setParameter("model", model);
+      query.setParameter("series", series);
+      return query.getSingleResult();
+   }
 }
